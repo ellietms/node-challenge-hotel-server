@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const bookings = require("./bookings.json");
+let bookings = require("./bookings.json");
 
 const app = express();
 
@@ -69,8 +69,8 @@ function newRoomId(arr){
 // delete one booking
 app.delete("/bookings/remove/:id",(req,res) => {
   let {id} = req.params
-  bookings = bookings.filter(booking => booking.id !== id)
-  if(removeById){
+  bookings = bookings.filter(booking => booking.id !== Number(id))
+  if(bookings){
     res.json(bookings)
   }
   else{
