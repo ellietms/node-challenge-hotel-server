@@ -92,11 +92,10 @@ app.delete("/bookings/remove/:id", (req, res) => {
 });
 
 // level 3
+// if the customer write down another type how can I convert it to this type?
 app.get("/bookings/search/:date",(req,res) => {
   let {date} = req.params
-  console.log(date)
   date = moment(date).format("YYYY-MM-DD");
-  console.log(date)
   bookings = bookings.filter(booking => booking.checkInDate === date)
   res.json(bookings);
 })
