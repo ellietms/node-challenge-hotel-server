@@ -49,6 +49,8 @@ app.post("/bookings/newBooking",(req,res) => {
   res.json(bookings)
 })
 
+
+// Make new Id
 function newId(arr){
     if (arr.length !== 0) {
       return Math.max(...Object.values(arr.map((element) => element.id))) + 1;
@@ -57,6 +59,8 @@ function newId(arr){
     }
   }
 
+
+// Make new roomId 
 function newRoomId(arr){
   if (arr.length !== 0) {
     return Math.max(...Object.values(arr.map((element) => element.roomId))) + 1;
