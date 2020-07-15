@@ -7,6 +7,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+
+app.get("/", (req,res) => {
+  res.json("Hey! Ellie ' s server is working :)")
+})
+
 // read all bookings
 app.get("/bookings", function (req, res) {
   res.json(bookings);
