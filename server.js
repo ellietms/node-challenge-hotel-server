@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 let bookings = require("./bookings.json");
 let moment = require("./node_modules/moment")
-
+let validator = require("email-validator");
 const app = express();
 
 app.use(express.json());
@@ -41,7 +41,7 @@ app.post("/bookings/newBooking", (req, res) => {
     req.body.surname === "" ||
     req.body.email === "" ||
     req.body.checkInDate === "" ||
-    req.body.checkOutDate === ""
+    req.body.checkOutDate === "" 
   ) 
   {
     res.send(400).json("Please make sure all fields are filled in correctly");
@@ -49,6 +49,7 @@ app.post("/bookings/newBooking", (req, res) => {
   else {
     let ID = newId(bookings);
     let RoomId = newRoomId(bookings);
+    if(validator.validate(req.body.email) || ){
     bookings.push({
       id: ID,
       title: req.body.title,
@@ -59,8 +60,12 @@ app.post("/bookings/newBooking", (req, res) => {
       checkInDate: req.body.checkInDate,
       checkOutDate: req.body.checkOutDate,
     });
+    res.json(bookings);
   }
-  res.json(bookings);
+  else{
+    res.json("Your email is not validate")
+  }
+  }
 });
 
 // Make new Id
