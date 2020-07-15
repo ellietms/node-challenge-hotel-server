@@ -33,7 +33,8 @@ app.get("/bookings/:id", (req, res) => {
 
 // create new bookings
 app.post("/bookings/newBooking", (req, res) => {
-  // level 2
+  // level 2 
+  // level 4
   if (
     req.body.title === "" ||
     req.body.firstName === "" ||
