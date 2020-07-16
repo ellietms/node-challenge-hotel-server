@@ -49,7 +49,7 @@ app.post("/bookings/newBooking", (req, res) => {
   else {
     let ID = newId(bookings);
     let RoomId = newRoomId(bookings);
-    if(validator.validate(req.body.email) || ){
+    if(validator.validate(req.body.email) || moment(req.body.checkOutDate).diff(moment(req.body.checkInDate) > 0 ){
     bookings.push({
       id: ID,
       title: req.body.title,
@@ -63,7 +63,7 @@ app.post("/bookings/newBooking", (req, res) => {
     res.json(bookings);
   }
   else{
-    res.json("Your email is not validate")
+    res.json("Your information is not correct")
   }
   }
 });
