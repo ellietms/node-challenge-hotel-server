@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 let bookings = require("./bookings.json");
-let moment = require("./node_modules/moment")
+let moment = require("./node_modules/moment");
 let validator = require("email-validator");
 const app = express();
 
@@ -33,7 +33,7 @@ app.get("/bookings/:id", (req, res) => {
 
 // create new bookings
 app.post("/bookings/newBooking", (req, res) => {
-  // level 2 
+  // level 2
   // level 4
   if (
     req.body.title === "" ||
@@ -41,30 +41,30 @@ app.post("/bookings/newBooking", (req, res) => {
     req.body.surname === "" ||
     req.body.email === "" ||
     req.body.checkInDate === "" ||
-    req.body.checkOutDate === "" 
-  ) 
-  {
+    req.body.checkOutDate === ""
+  ) {
     res.send(400).json("Please make sure all fields are filled in correctly");
-  } 
-  else {
-    let ID = newId(bookings);
-    let RoomId = newRoomId(bookings);
-    if(validator.validate(req.body.email) || moment(req.body.checkOutDate).diff(moment(req.body.checkInDate) > 0 ){
-    bookings.push({
-      id: ID,
-      title: req.body.title,
-      firstName: req.body.firstName,
-      surname: req.body.surname,
-      email: req.body.email,
-      roomId: RoomId,
-      checkInDate: req.body.checkInDate,
-      checkOutDate: req.body.checkOutDate,
-    });
-    res.json(bookings);
-  }
-  else{
-    res.json("Your information is not correct")
-  }
+  } else {
+    if (
+      validator.validate(req.body.email) ||
+      moment(req.body.checkOutDate).diff(moment(req.body.checkInDate) > 0)
+    ) {
+      let ID = newId(bookings);
+      let RoomId = newRoomId(bookings);
+      bookings.push({
+        id: ID,
+        title: req.body.title,
+        firstName: req.body.firstName,
+        surname: req.body.surname,
+        email: req.body.email,
+        roomId: RoomId,
+        checkInDate: req.body.checkInDate,
+        checkOutDate: req.body.checkOutDate,
+      });
+      res.json(bookings);
+    } else {
+      res.json("Your information is not correct");
+    }
   }
 });
 
@@ -99,13 +99,12 @@ app.delete("/bookings/remove/:id", (req, res) => {
 
 // level 3
 // if the customer write down another type how can I convert it to this type?
-app.get("/bookings/search/:date",(req,res) => {
-  let {date} = req.params
+app.get("/bookings/search/:date", (req, res) => {
+  let { date } = req.params;
   date = moment(date).format("YYYY-MM-DD");
-  bookings = bookings.filter(booking => booking.checkInDate === date)
+  bookings = bookings.filter((booking) => booking.checkInDate === date);
   res.json(bookings);
-})
-
+});
 
 const listener = app.listen(process.env.PORT, function () {
   console.log("Your app is listening on port " + listener.address().port);
