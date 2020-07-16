@@ -107,6 +107,8 @@ app.get("/bookings/search/:date", (req, res) => {
 });
 
 // level 5
+// Cannot set headers after they are sent to the client
+// route names!!
 app.post("/bookings/search/info",(req,res) => {
   let surname = `${req.query.surname}`;
   let firstName = `${req.query.firstName}`;
