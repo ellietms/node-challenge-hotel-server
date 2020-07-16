@@ -45,10 +45,8 @@ app.post("/bookings/newBooking", (req, res) => {
   ) {
     res.send(400).json("Please make sure all fields are filled in correctly");
   } else {
-    if (
-      validator.validate(req.body.email) ||
-      moment(req.body.checkOutDate).diff(moment(req.body.checkInDate) > 0)
-    ) {
+    if ( validator.validate(req.body.email) && moment(req.body.checkOutDate).diff(moment(req.body.checkInDate))>0)
+     {
       let ID = newId(bookings);
       let RoomId = newRoomId(bookings);
       bookings.push({
@@ -61,8 +59,10 @@ app.post("/bookings/newBooking", (req, res) => {
         checkInDate: req.body.checkInDate,
         checkOutDate: req.body.checkOutDate,
       });
+      console.log(moment(req.body.checkOutDate).diff(moment(req.body.checkInDate)));
       res.json(bookings);
     } else {
+      console.log(moment(req.body.checkOutDate).diff(moment(req.body.checkInDate)));
       res.json("Your information is not correct");
     }
   }
@@ -105,6 +105,9 @@ app.get("/bookings/search/:date", (req, res) => {
   bookings = bookings.filter((booking) => booking.checkInDate === date);
   res.json(bookings);
 });
+
+// level 5
+
 
 const listener = app.listen(process.env.PORT, function () {
   console.log("Your app is listening on port " + listener.address().port);
