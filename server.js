@@ -107,8 +107,27 @@ app.get("/bookings/search/:date", (req, res) => {
 });
 
 // level 5
+app.post("/bookings/search/info",(req,res) => {
+  let surname = `${req.query.surname}`;
+  let firstName = `${req.query.firstName}`;
+  let email =`${req.query.email}`;
+  if(email){
+  let filteredEmail = bookings.filter(booking => booking.email === email)
+  res.json(filteredEmail);
+  }
+  if(firstName){
+    let filteredFirstName = bookings.filter(booking => booking.firstName === firstName)
+    res.json(filteredFirstName);
+  }
+  if(surname){
+    let filteredSurname = bookings.filter(booking => booking.surname === surname)
+    res.json(filteredSurname);
+  }
+  else{
+    res.json("Sorry!!")
+  }
+})
 
-
-const listener = app.listen(process.env.PORT, function () {
+const listener = app.listen(3000, function () {
   console.log("Your app is listening on port " + listener.address().port);
 });
