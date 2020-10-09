@@ -109,7 +109,6 @@ app.post("/bookings/newBooking", (req, res) => {
   });
 });
 
-
 // delete one booking
 app.delete("/bookings/remove/:id", (req, res) => {
   const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
@@ -125,12 +124,12 @@ app.delete("/bookings/remove/:id", (req, res) => {
           res.send("ERROR", err);
           client.close();
         } else {
-          res.send("NewData", newData);
+          res.send("it is removed successfully");
           client.close();
         }
       });
     } else {
-      res.send(404).json("Sorry can not find any data with this id");
+      res.status(404).json("Sorry can not find any data with this id");
     }
   });
 });
@@ -144,15 +143,12 @@ app.get("/bookings/search/:date", (req, res) => {
     const collection = db.collection("Data");
     let { date } = req.params;
     date = moment(date).format("YYYY-MM-DD");
-    collection.findOne().toArray((err, data) => {
+    collection.findOne({ checkInDate: `${date}` }, (err, data) => {
       if (err) {
         res.send(err);
         client.close();
       } else {
-        const filteredData = data.filter(
-          (booking) => booking.checkInDate === date
-        );
-        res.json(filteredData);
+        res.json(data);
         client.close();
       }
     });
@@ -161,33 +157,21 @@ app.get("/bookings/search/:date", (req, res) => {
 
 // level 5
 // Cannot set headers after they are sent to the client
-app.post("/bookings/search/info", (req, res) => {
+app.post("/bookings/search", (req, res) => {
   const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
-    let surname = `${req.query.surname}`;
-    let firstName = `${req.query.firstName}`;
-    let email = `${req.query.email}`;
-    collection.find().toArray((err, data) => {
-      if (email) {
-        let filteredEmail = data.filter((booking) => booking.email === email);
-        res.json(filteredEmail);
-      }
-      if (firstName) {
-        let filteredFirstName = data.filter(
-          (booking) => booking.firstName === firstName
-        );
-        res.json(filteredFirstName);
-      }
-      if (surname) {
-        let filteredSurname = bookings.filter(
-          (booking) => booking.surname === surname
-        );
-        res.json(filteredSurname);
-      }
+    let surname = req.query.surname;
+    let firstName = req.query.firstName;
+    let email = req.body.email;
+    collection.findOne({ email: email }, (err, data) => {
       if (err) {
         res.json("Error", err);
+        client.close();
+      } else {
+        res.json(data);
+        client.close;
       }
     });
   });
