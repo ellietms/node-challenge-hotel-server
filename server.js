@@ -52,7 +52,7 @@ app.get("/bookings/:id", (req, res) => {
       newId = mongodb.ObjectID(id);
       collection.findOne({ _id: newId }, (err, data) => {
         if (err) {
-          response.send(err);
+          response.send("Error",err);
           client.close();
         } else {
           response.send(data);
