@@ -16,8 +16,8 @@ app.use(cors());
 
 // level 1
 app.get("/", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
-
     res.json("Hey! Ellie ' s server is working :)");
   });
 });
