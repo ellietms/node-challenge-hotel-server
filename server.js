@@ -1,4 +1,4 @@
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongodb = require("mongodb");
@@ -11,20 +11,23 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const client = new mongodb.MongoClient(uri);
-const db = client.db("Hotel");
-const collection = db.collection("Data");
+
+
 
 // level 1
 app.get("/", (req, res) => {
   client.connect(() => {
+
     res.json("Hey! Ellie ' s server is working :)");
   });
 });
 
 // read all bookings
 app.get("/bookings", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
     collection.find().toArray((err, data) => {
       if (err) {
         res.send("Error", err);
@@ -39,7 +42,10 @@ app.get("/bookings", (req, res) => {
 
 // read bookings with specific ids
 app.get("/bookings/:id", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
     const { id } = req.params;
     let newId;
     if (mongodb.ObjectID.isValid(id)) {
@@ -63,7 +69,10 @@ app.get("/bookings/:id", (req, res) => {
 // create new bookings
 // level 2 & level 4
 app.post("/bookings/newBooking", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
     const newData = {
       title: req.body.title,
       firstName: req.body.firstName,
@@ -119,7 +128,10 @@ app.post("/bookings/newBooking", (req, res) => {
 
 // delete one booking
 app.delete("/bookings/remove/:id", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
     let { id } = req.params;
     let newId;
     if (mongodb.ObjectID.isValid(id)) {
@@ -142,7 +154,10 @@ app.delete("/bookings/remove/:id", (req, res) => {
 // level 3
 // if the customer write down another type how can I convert it to this type?
 app.get("/bookings/search/:date", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
     let { date } = req.params;
     date = moment(date).format("YYYY-MM-DD");
     collection.findOne().toArray((err, data) => {
@@ -164,7 +179,10 @@ app.get("/bookings/search/:date", (req, res) => {
 // Cannot set headers after they are sent to the client
 // route names!!
 app.post("/bookings/search/info", (req, res) => {
+  const client = new mongodb.MongoClient(uri);
   client.connect(() => {
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
     let surname = `${req.query.surname}`;
     let firstName = `${req.query.firstName}`;
     let email = `${req.query.email}`;
