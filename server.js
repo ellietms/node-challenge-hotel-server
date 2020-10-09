@@ -162,10 +162,14 @@ app.post("/bookings/search", (req, res) => {
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
-    let surname = req.query.surname;
-    let firstName = req.query.firstName;
+    let surname = req.body.surname;
+    let firstName = req.body.firstName;
     let email = req.body.email;
-    collection.findOne({ email: email }, (err, data) => {
+    const searchObject = {
+      $or: [{ email: email }, { surname: surname }, { firstName: firstName }],
+    };
+
+    collection.find(searchObject).toArray((err, data) => {
       if (err) {
         res.json("Error", err);
         client.close();
