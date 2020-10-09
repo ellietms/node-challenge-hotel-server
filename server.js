@@ -8,23 +8,40 @@ let validator = require("email-validator");
 const { response } = require("express");
 const PORT = process.env.PORT;
 const app = express();
+
 app.use(express.json());
 app.use(cors());
 
-
-
-
-// level 1
-app.get("/", (req, res) => {
-  const client = new mongodb.MongoClient(uri);
+// read bookings with specific ids
+app.get("/bookings/:id", (req, res) => {
+  const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
-    res.json("Hey! Ellie ' s server is working :)");
+    const db = client.db("Hotel");
+    const collection = db.collection("Data");
+    const { id } = req.params;
+    console.log(typeof id);
+    let newId;
+    if (mongodb.ObjectID.isValid(id)) {
+      newId = mongodb.ObjectID(id);
+      collection.findOne({ _id: newId }, (err, data) => {
+        if (err) {
+          res.send("Error", err);
+          client.close();
+        } else {
+          res.send(data);
+          client.close();
+        }
+      });
+    } else {
+      res.send("id is not valid");
+      client.close();
+    }
   });
 });
 
 // read all bookings
 app.get("/bookings", (req, res) => {
-  const client = new mongodb.MongoClient(uri);
+  const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
@@ -40,36 +57,18 @@ app.get("/bookings", (req, res) => {
   });
 });
 
-// read bookings with specific ids
-app.get("/bookings/:id", (req, res) => {
+//level 1
+app.get("/", (req, res) => {
   const client = new mongodb.MongoClient(uri);
   client.connect(() => {
-    const db = client.db("Hotel");
-    const collection = db.collection("Data");
-    const { id } = req.params;
-    let newId;
-    if (mongodb.ObjectID.isValid(id)) {
-      newId = mongodb.ObjectID(id);
-      collection.findOne({ _id: newId }, (err, data) => {
-        if (err) {
-          response.send("Error",err);
-          client.close();
-        } else {
-          response.send(data);
-          client.close();
-        }
-      });
-    } else {
-      res.send("id is not valid");
-      client.close();
-    }
+    res.json("Hey! Ellie ' s server is working :)");
   });
 });
 
 // create new bookings
 // level 2 & level 4
 app.post("/bookings/newBooking", (req, res) => {
-  const client = new mongodb.MongoClient(uri);
+  const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
@@ -78,6 +77,7 @@ app.post("/bookings/newBooking", (req, res) => {
       firstName: req.body.firstName,
       surname: req.body.surname,
       email: req.body.email,
+      roomId: req.body.roomId,
       checkInDate: req.body.checkInDate,
       checkOutDate: req.body.checkOutDate,
     };
@@ -87,6 +87,7 @@ app.post("/bookings/newBooking", (req, res) => {
         req.body.firstName === "" ||
         req.body.surname === "" ||
         req.body.email === "" ||
+        req.body.roomId === "" ||
         req.body.checkInDate === "" ||
         req.body.checkOutDate === ""
       ) {
@@ -108,27 +109,10 @@ app.post("/bookings/newBooking", (req, res) => {
   });
 });
 
-// Make new Id
-// function newId(arr) {
-//   if (arr.length !== 0) {
-//     return Math.max(...Object.values(arr.map((element) => element.id))) + 1;
-//   } else {
-//     return 0;
-//   }
-// }
-
-// Make new roomId
-// function newRoomId(arr) {
-//   if (arr.length !== 0) {
-//     return Math.max(...Object.values(arr.map((element) => element.roomId))) + 1;
-//   } else {
-//     return 0;
-//   }
-// }
 
 // delete one booking
 app.delete("/bookings/remove/:id", (req, res) => {
-  const client = new mongodb.MongoClient(uri);
+  const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
@@ -154,7 +138,7 @@ app.delete("/bookings/remove/:id", (req, res) => {
 // level 3
 // if the customer write down another type how can I convert it to this type?
 app.get("/bookings/search/:date", (req, res) => {
-  const client = new mongodb.MongoClient(uri);
+  const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
@@ -162,7 +146,7 @@ app.get("/bookings/search/:date", (req, res) => {
     date = moment(date).format("YYYY-MM-DD");
     collection.findOne().toArray((err, data) => {
       if (err) {
-        response.send(err);
+        res.send(err);
         client.close();
       } else {
         const filteredData = data.filter(
@@ -177,9 +161,8 @@ app.get("/bookings/search/:date", (req, res) => {
 
 // level 5
 // Cannot set headers after they are sent to the client
-// route names!!
 app.post("/bookings/search/info", (req, res) => {
-  const client = new mongodb.MongoClient(uri);
+  const client = new mongodb.MongoClient(uri, { useUnifiedTopology: true });
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
