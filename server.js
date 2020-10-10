@@ -85,11 +85,11 @@ app.post("/bookings/newBooking", (req, res) => {
       if (
         req.body.title === "" ||
         req.body.firstName === "" ||
-        req.body.surname === "" ||
+        req.body.surName === "" ||
         req.body.email === "" ||
         req.body.roomId === "" ||
-        req.body.checkInDate === "" ||
-        req.body.checkOutDate === ""
+        req.body.checkIn === "" ||
+        req.body.checkOut === ""
       ) {
         res
           .status(400)
