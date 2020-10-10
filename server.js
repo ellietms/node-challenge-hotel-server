@@ -75,11 +75,11 @@ app.post("/bookings/newBooking", (req, res) => {
     const newData = {
       title: req.body.title,
       firstName: req.body.firstName,
-      surname: req.body.surName,
+      surName: req.body.surName,
       email: req.body.email,
       roomId: req.body.roomId,
-      checkInDate: req.body.checkIn,
-      checkOutDate: req.body.checkOut,
+      checkIn: req.body.checkIn,
+      checkOut: req.body.checkOut,
     };
     collection.insertOne(newData, (err, data) => {
       if (
@@ -143,7 +143,7 @@ app.get("/bookings/search/:date", (req, res) => {
     const collection = db.collection("Data");
     let { date } = req.params;
     date = moment(date).format("YYYY-MM-DD");
-    collection.findOne({ checkInDate: `${date}` }, (err, data) => {
+    collection.findOne({ checkIn: `${date}` }, (err, data) => {
       if (err) {
         res.send(err);
         client.close();
@@ -162,11 +162,11 @@ app.post("/bookings/search", (req, res) => {
   client.connect(() => {
     const db = client.db("Hotel");
     const collection = db.collection("Data");
-    let surname = req.body.surname;
+    let surName = req.body.surName;
     let firstName = req.body.firstName;
     let email = req.body.email;
     const searchObject = {
-      $or: [{ email: email }, { surname: surname }, { firstName: firstName }],
+      $or: [{ email: email }, { surName: surName }, { firstName: firstName }],
     };
 
     collection.find(searchObject).toArray((err, data) => {
