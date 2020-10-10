@@ -75,11 +75,11 @@ app.post("/bookings/newBooking", (req, res) => {
     const newData = {
       title: req.body.title,
       firstName: req.body.firstName,
-      surname: req.body.surname,
+      surname: req.body.surName,
       email: req.body.email,
       roomId: req.body.roomId,
-      checkInDate: req.body.checkInDate,
-      checkOutDate: req.body.checkOutDate,
+      checkInDate: req.body.checkIn,
+      checkOutDate: req.body.checkOut,
     };
     collection.insertOne(newData, (err, data) => {
       if (
@@ -97,7 +97,7 @@ app.post("/bookings/newBooking", (req, res) => {
         client.close();
       } else if (
         validator.validate(req.body.email) &&
-        moment(req.body.checkOutDate).diff(moment(req.body.checkInDate)) > 0
+        moment(req.body.checkOut).diff(moment(req.body.checkIn)) > 0
       ) {
         res.json(data);
         client.close();
